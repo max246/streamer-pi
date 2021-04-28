@@ -1,0 +1,11 @@
+adafruit-circuitpython-74hc595==1.2.1
+adafruit-circuitpython-busdevice==5.0.1
+adafruit-circuitpython-charlcd==3.3.3
+adafruit-circuitpython-mcp230xx==2.4.2
+Adafruit-GPIO==1.0.3
+Flask==1.1.2
+Flask-HTTPAuth==4.1.0
+pygame==2.0.0
+pyserial==3.4
+requests==2.21.0
+RPi.GPIO==0.7.0
