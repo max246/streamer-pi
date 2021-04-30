@@ -128,6 +128,78 @@ def update_settings():
         print(e)
         return jsonify({"status" : False})
 
+@app.route('/api/login_instagram', methods=['POST'])
+@auth.login_required
+def login_instagram():
+    data = request.get_json()
+    try:
+        if manager.login_instagram(data['user'], data['pass']):
+            return jsonify({"status" : True})
+        else:
+            if manager.require_two_fact():
+                return jsonify({"status" : False, "two_factor": True})
+            else:
+                return jsonify({"status" : False})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
+@app.route('/api/login_instagram_code', methods=['POST'])
+@auth.login_required
+def login_instagram_code():
+    data = request.get_json()
+    try:
+        if manager.two_factor(data['code']):
+            return jsonify({"status" : True})
+        else:
+            return jsonify({"status" : False})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
+@app.route('/api/action_instagram', methods=['POST'])
+@auth.login_required
+def action_instagram():
+    data = request.get_json()
+    try:
+        if data['mode'] == "create":
+            status = manager.create_broadcast()
+            return jsonify({"status" :status , "next": "start" })
+        elif data['mode'] == "start":
+            status = manager.start_broadcast()
+            if status:
+                streaminfo = manager.get_instagram_stream()
+                return jsonify({"status" :status , "stream_server": streaminfo[0], "stream_key" : streaminfo[1] , "next": "end"})
+            else:
+                return jsonify({"status" :status })
+        elif data['mode'] == "stop":
+            status = manager.end_broadcast()
+            return jsonify({"status" :status , "next": "create"})
+
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
+@app.route('/api/status_instagram', methods=['GET'])
+@auth.login_required
+def status_instagram():
+    try:
+        status_stream = manager.get_status_stream()
+        status_login = manager.get_status_login()
+        if status_login:
+           streaminfo = manager.get_instagram_stream()
+           if status_stream:
+               return jsonify({"status" :status_login , "stream":  status_stream,"stream_server": streaminfo[0], "stream_key" : streaminfo[1]})
+           else:
+               return jsonify({"status" :status_login,"stream":  status_stream, })
+        else:
+           return jsonify({"status" :status_login })
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
+
+
 
 
 
