@@ -57,11 +57,11 @@ class Manager:
             self._config.write(configfile)
 
     def start_streaming(self, provider):
-        os.system("sudo supervisorctl restart streamer")
+        os.system("sudo supervisorctl restart stream")
         return True
 
     def stop_streaming(self):
-        os.system("sudo supervisorctl stop streamer")
+        os.system("sudo supervisorctl stop stream")
         return True
 
     def list_devices(self):
