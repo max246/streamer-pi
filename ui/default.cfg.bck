@@ -2,6 +2,7 @@
 port=80
 password=test
 active=youtube
+device = /dev/video0
 
 
 [youtube]
@@ -19,8 +20,8 @@ quality=medium
 vbr=1000k
 
 [instagram]
-user=
-pass=
+url =
+key =
 fps=30
 quality=veryfast
 vbr=6000k

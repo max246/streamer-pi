@@ -4,6 +4,8 @@ import time
 import datetime
 import shutil
 
+from lib.instagram import *
+
 class Manager:
 
     def __init__(self,config,config_file):
@@ -81,3 +83,40 @@ class Manager:
         self._config.set("http","device", settings['device'])
         self._config.set("http","password", settings['pass'])
         self.save()
+
+    def login_instagram(self, user, password):
+        self._instagram  = Instagram(username=user, password=password)
+        if self._instagram.login():
+            return True
+        else:
+            return False
+
+    def require_two_fact(self):
+        return self._instagram.is_two_factor()
+
+    def two_factor(self, code):
+
+        if self._instagram.two_factor(code):
+            return True
+        else:
+            return False
+
+    def create_broadcast(self):
+        return self._instagram.create_broadcast()
+
+    def start_broadcast(self):
+        return self._instagram.start_broadcast()
+
+    def get_instagram_stream(self):
+        return [self._instagram.stream_server, self._instagram.stream_key]
+
+    def end_broadcast(self):
+        return self._instagram.end_broadcast()
+
+    def get_status_stream(self):
+        return self._instagram.get_status_stream()
+
+    def get_status_login(self):
+        return self._instagram.is_loggedin()
+
+

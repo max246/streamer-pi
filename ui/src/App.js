@@ -3,6 +3,7 @@ import Header from "./component/header";
 import Home from "./page/home";
 import Provider from "./page/provider";
 import Settings from "./page/settings";
+import Instagram from "./page/instagram";
 
 import config from "./config";
 
@@ -27,6 +28,9 @@ function App() {
             </Route>
             <Route exact path="/settings">
               <Settings></Settings>
+            </Route>
+            <Route exact path="/instagram">
+              <Instagram></Instagram>
             </Route>
           </Switch>
         </Router>

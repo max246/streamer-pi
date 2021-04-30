@@ -83,7 +83,7 @@ function StreamingComponent(props) {
         })}
       </div>
       <Websocket
-        url={"ws://localhost:8000"}
+        url={"ws://" + window.location.host + ":8000"}
         ref={wsRef}
         onOpen={handleOpen}
         onClose={handleClose}

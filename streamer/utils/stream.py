@@ -3,7 +3,6 @@ import os
 import configparser
 import threading
 import time
-from ItsAGramLive import ItsAGramLive
 
 
 class Stream:
@@ -86,21 +85,11 @@ class Stream:
             quality = self._params['instagram']['quality']
             fps = self._params['instagram']['fps']
             vbr = self._params['instagram']['vbr']
-            username = self._params['instagram']['user']
-            password = self._params['instagram']['pass']
-            self._insta_live = ItsAGramLive(username=username, password=password)
-
-            if self._insta_live.login():
-                print("You'r logged in")
-                if self._insta_live.create_broadcast():
-                    print("create broads")
-                    if self._insta_live.start_broadcast():
-                        print("start broadcast")
-                        url = self._insta_live.stream_server
-                        key = self._insta_live.stream_key
-                        return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", "default", "-acodec", "aac",
-                                "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p", "-s","720x1280",
-                                "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}/{}".format(url, key)]
+            url = self._params['twitch']['url']
+            key = self._params['twitch']['key']
+            return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", "default", "-acodec", "aac",
+                    "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p", "-s","720x1280",
+                    "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}/{}".format(url, key)]
             return None
 
     def list_videos(self):
