@@ -14,6 +14,9 @@ function HeaderComponent(props) {
         </Link>{" "}
         <Link to="/providers" className="navigationLink">
           Providers
+        </Link>{" "}
+        <Link to="/settings" className="navigationLink">
+          Settings
         </Link>
       </div>
     </Wrapper>

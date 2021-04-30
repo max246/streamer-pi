@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Header from "./component/header";
 import Home from "./page/home";
 import Provider from "./page/provider";
+import Settings from "./page/settings";
 
 import config from "./config";
 
@@ -23,6 +24,9 @@ function App() {
             </Route>
             <Route exact path="/providers">
               <Provider do="list"></Provider>
+            </Route>
+            <Route exact path="/settings">
+              <Settings></Settings>
             </Route>
           </Switch>
         </Router>

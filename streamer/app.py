@@ -7,9 +7,9 @@ from simple_websocket_server import WebSocketServer, WebSocket
 from utils.stream import *
 
 stream = Stream()
-videos = stream.list_videos()
-stream.set_input(videos[1])
 stream.start_stream()
+
+
 
 class SimpleChat(WebSocket):
     def handle(self):

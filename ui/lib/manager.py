@@ -63,3 +63,21 @@ class Manager:
     def stop_streaming(self):
         os.system("sudo supervisorctl stop streamer")
         return True
+
+    def list_devices(self):
+        found = []
+        for line in os.listdir("/dev/"):
+            if line.find("video") >= 0:
+                found.append("/dev/{}".format(line))
+        return found
+
+    def get_settings(self):
+        settings = {"device":"", "pass":""}
+        settings["device"] = self._config.get("http","device")
+        settings["pass"] =self._config.get("http","password")
+        return settings
+
+    def set_settings(self, settings):
+        self._config.set("http","device", settings['device'])
+        self._config.set("http","password", settings['pass'])
+        self.save()

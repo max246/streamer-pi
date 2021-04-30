@@ -97,4 +97,38 @@ def stop():
         print(e)
         return jsonify({"status" : False})
 
+@app.route('/api/list_device', methods=['GET'])
+@auth.login_required
+def liist_device():
+    try:
+        devices = manager.list_devices()
+        return jsonify({"status" : True, "devices": devices})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
+@app.route('/api/settings', methods=['GET'])
+@auth.login_required
+def settings():
+    try:
+        settings = manager.get_settings()
+        return jsonify({"status" : True, "settings": settings})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
+@app.route('/api/update_settings', methods=['POST'])
+@auth.login_required
+def update_settings():
+    data = request.get_json()
+    try:
+        manager.set_settings(data)
+        return jsonify({"status" : True})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
+
+
+
 app.run(debug=False, host='0.0.0.0', port=port)
