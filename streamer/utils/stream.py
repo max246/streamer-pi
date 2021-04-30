@@ -85,12 +85,11 @@ class Stream:
             quality = self._params['instagram']['quality']
             fps = self._params['instagram']['fps']
             vbr = self._params['instagram']['vbr']
-            url = self._params['twitch']['url']
-            key = self._params['twitch']['key']
+            url = self._params['instagram']['url']
+            key = self._params['instagram']['key']
             return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", "default", "-acodec", "aac",
-                    "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p", "-s","720x1280",
-                    "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}/{}".format(url, key)]
-            return None
+                    "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p","-s","720x1280",
+                    "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}{}".format(url, key)]
 
     def list_videos(self):
         found = []
