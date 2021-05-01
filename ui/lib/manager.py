@@ -3,6 +3,8 @@ import configparser
 import time
 import datetime
 import shutil
+import subprocess
+
 
 from lib.instagram import *
 
@@ -73,14 +75,30 @@ class Manager:
                 found.append("/dev/{}".format(line))
         return found
 
+    def list_audio(self):
+        found = []
+        process = subprocess.Popen(['arecord', '-L'],
+                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+        for line in iter(process.stdout.readline,''):
+            output = line.rstrip()
+            #if len(output.replace("    ", "")[0:4])>= 0:
+            cut_front = output[0:4]
+            remove_space = cut_front.replace("    ", "")
+            if len(remove_space) > 0:
+                found.append(output)
+        return found
+
+
     def get_settings(self):
         settings = {"device":"", "pass":""}
         settings["device"] = self._config.get("http","device")
+        settings["audio"] = self._config.get("http","audio")
         settings["pass"] =self._config.get("http","password")
         return settings
 
     def set_settings(self, settings):
         self._config.set("http","device", settings['device'])
+        self._config.set("http","audio", settings['audio'])
         self._config.set("http","password", settings['pass'])
         self.save()
 

@@ -107,6 +107,16 @@ def liist_device():
         print(e)
         return jsonify({"status" : False})
 
+@app.route('/api/list_audio', methods=['GET'])
+@auth.login_required
+def list_audio():
+    try:
+        audio = manager.list_audio()
+        return jsonify({"status" : True, "audio": audio})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
 @app.route('/api/settings', methods=['GET'])
 @auth.login_required
 def settings():
