@@ -16,8 +16,10 @@ class Stream:
         self._thread = StreamThread(self)
         self._thread.daemon = True
         self._thread.start()
+        self.active_provider = "youtube" 
 
         self._input = ""
+        self._input_audio = ""
         self._params = {"youtube": {"url": "", "key": "", "fps": "0", "quality": "", "vbr": ""},
                         "twitch": {"url": "", "key": "", "fps": "0", "quality": "", "vbr": ""},
                         "instagram": {"user": "", "pass": "", "fps": "0", "quality": "", "vbr": ""}}
@@ -37,6 +39,8 @@ class Stream:
             self._params["instagram"][item] = value
 
         self.set_input(config.get("http", "device"))
+        self._input_audio = config.get("http", "audio")
+        self.active_provider = config.get("http", "active")
 
     def set_clients(self, clients):
         self._clients = clients
@@ -49,7 +53,7 @@ class Stream:
 
 
     def start_stream(self):
-        cmds = self.get_cmd("instagram")
+        cmds = self.get_cmd(self.active_provider)
         print(cmds)
         self._process = subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
         self._is_streaming = True
@@ -69,7 +73,8 @@ class Stream:
             vbr = self._params['youtube']['vbr']
             url = self._params['youtube']['url']
             key = self._params['youtube']['key']
-            return ["/usr/bin/ffmpeg", "-ac", "1", "-f" , "alsa", "-i", "default", "-acodec", "aac",
+
+            return ["/usr/local/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
                     "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt","yuv420p",
                     "-preset", quality, "-framerate", fps , "-b:v", vbr, "-f" ,"flv", "{}/{}".format(url, key)]
         elif provider == 'twitch':
@@ -78,7 +83,7 @@ class Stream:
             vbr = self._params['twitch']['vbr']
             url = self._params['twitch']['url']
             key = self._params['twitch']['key']
-            return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", "default", "-acodec", "aac",
+            return ["/usr/local/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
                     "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p",
                     "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}{}".format(url, key)]
         elif provider == 'instagram':
@@ -87,7 +92,7 @@ class Stream:
             vbr = self._params['instagram']['vbr']
             url = self._params['instagram']['url']
             key = self._params['instagram']['key']
-            return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", "default", "-acodec", "aac",
+            return ["/usr/local/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
                     "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p","-s","720x1280",
                     "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}{}".format(url, key)]
 
