@@ -37,12 +37,12 @@ function EditProviderComponent(props) {
       body: JSON.stringify({
         device: device,
         pass: pass,
-        audio: audio,
+        audio: deviceAudio,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        window.location.reload(false);
+        //  window.location.reload(false);
       });
   };
   useLayoutEffect(() => {
