@@ -22,7 +22,9 @@ function EditProviderComponent(props) {
 
   const handleChange = (e) => {
     let value = e.currentTarget.value;
-    setPass(value);
+    let id = e.currentTarget.id;
+    if (id == "password") setPass(value);
+    else if (id == "stunnel") setStunnel(value);
   };
 
   const handleDevice = (e) => {
@@ -146,6 +148,7 @@ function EditProviderComponent(props) {
             value={pass}
             name="password"
             onChange={handleChange}
+            id="password"
             class="inputSetting"
           />
         </div>
@@ -155,10 +158,35 @@ function EditProviderComponent(props) {
             type="text"
             value={stunnel}
             name="stunnel"
+            id="stunnel"
             onChange={handleChange}
             class="inputSetting"
           />
         </div>
+
+        <div>
+          Stunnel host:{" "}
+          <input
+            type="text"
+            value={stunnel}
+            name="stunnel"
+            id="stunnel"
+            onChange={handleChange}
+            class="inputSetting"
+          />
+        </div>
+        <div>
+          Stunnel host:{" "}
+          <input
+            type="text"
+            value={stunnel}
+            name="stunnel"
+            id="stunnel"
+            onChange={handleChange}
+            class="inputSetting"
+          />
+        </div>
+
         <input
           type="button"
           name="submit"

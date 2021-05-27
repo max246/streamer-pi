@@ -22,6 +22,15 @@ verifyChain = no
 systemctl restart stunnel4 && systemctl status stunnel4
 
 
+
+
+Go to 
+sudo nano /etc/sysctl.conf
+
+uncomment 
+net.ipv4.ip_forward=1
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

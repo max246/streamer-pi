@@ -1,4 +1,6 @@
-sudo apt-get install python3 ffmpeg pip3 stunnel4 supervisor
+sudo apt-get install python3 ffmpeg pip3 stunnel4 supervisor hostapd dnsmasq
+sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
+
 cd ..
 sudo pip3 install -r r.txt
 
@@ -28,3 +30,25 @@ EOF
 sudo systemctl restart stunnel4
 sudo systemctl status stunnel4
 
+
+sudo cat > /etc/hostapd/hostapd.conf <<EOF
+country_code=GB
+interface=wlan0
+ssid=NameOfNetwork
+hw_mode=g
+channel=7
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=AardvarkBadgerHedgehog
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+EOF
+
+sudo systemctl unmask hostapd
+sudo systemctl enable hostapd
+
+systemctl stop hostapd
+systemctl stop dnsmasq
