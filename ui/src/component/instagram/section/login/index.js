@@ -7,22 +7,28 @@ import {
   useParams,
 } from "react-router-dom";
 
+import Loading from "../../../loading";
+
 import config from "../../../../config";
+import "./style.css";
 
 function LoginInstagramComponent(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [twofact, setTwoFact] = useState(false);
   const [code, setCode] = useState("");
+  const [showLoading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     let id = e.currentTarget.id;
     let value = e.currentTarget.value;
+    console.log(id);
     if (id == "user") setUsername(value);
     else if (id == "password") setPassword(value);
     else if (id == "code") setCode(value);
   };
   const handleUpdate = (e) => {
+    setLoading(true);
     const response = fetch(config.api + "login_instagram", {
       method: "POST",
       cache: "no-cache",
@@ -36,6 +42,7 @@ function LoginInstagramComponent(props) {
     })
       .then((response) => response.json())
       .then((data) => {
+        setLoading(false);
         if (data.status) {
           alert("all good");
           props.cb();
@@ -48,10 +55,14 @@ function LoginInstagramComponent(props) {
           }
         }
         console.log(data);
+      })
+      .catch(() => {
+        setLoading(false);
       });
   };
 
   const handleUpdateTwo = (e) => {
+    setLoading(true);
     const response = fetch(config.api + "login_instagram_code", {
       method: "POST",
       cache: "no-cache",
@@ -64,12 +75,16 @@ function LoginInstagramComponent(props) {
     })
       .then((response) => response.json())
       .then((data) => {
+        setLoading(false);
         if (data.status) {
           alert("all good");
           props.cb();
         } else {
           alert("opsss wrong code");
         }
+      })
+      .catch(() => {
+        setLoading(false);
       });
   };
   useLayoutEffect(() => {
@@ -90,6 +105,7 @@ function LoginInstagramComponent(props) {
 
   return (
     <div>
+      {showLoading ? <Loading /> : ""}
       {twofact ? (
         <div>
           Two Fact Code:{" "}
@@ -99,6 +115,7 @@ function LoginInstagramComponent(props) {
             name="submit"
             value="Login"
             onClick={handleUpdateTwo}
+            className="inputLogin"
           />
         </div>
       ) : (
@@ -109,19 +126,24 @@ function LoginInstagramComponent(props) {
             value={username}
             id="user"
             onChange={handleChange}
+            className="inputLogin"
           />
+          <br />
           Password{" "}
           <input
             type="password"
-            value={username}
+            value={password}
             id="password"
             onChange={handleChange}
+            className="inputLogin"
           />
+          <br />
           <input
             type="button"
             name="submit"
             value="Login"
             onClick={handleUpdate}
+            className="buttonLogin"
           />
         </div>
       )}

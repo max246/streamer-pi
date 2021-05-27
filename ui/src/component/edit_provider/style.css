@@ -1,0 +1,27 @@
+.inputProvider {
+    color: #94a0ad;
+    background-color: #3b4651;
+    background-clip: padding-box;
+    border: 1px solid #424e5a;
+    border-radius: .2rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    font-size: 20px;
+    padding: 5px;
+    width:400px;
+    margin:10px;
+}
+
+.buttonProvider {
+    color: #94a0ad;
+    background-color: #3b4651;
+    background-clip: padding-box;
+    border: 1px solid #424e5a;
+    border-radius: .2rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.provider {
+    text-align: left;
+}

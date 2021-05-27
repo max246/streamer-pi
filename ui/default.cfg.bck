@@ -3,6 +3,8 @@ port=80
 password=test
 active=youtube
 device = /dev/video0
+audio =
+stunnel =
 
 
 [youtube]

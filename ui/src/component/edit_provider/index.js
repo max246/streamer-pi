@@ -7,11 +7,14 @@ import {
   useParams,
 } from "react-router-dom";
 
+import "./style.css";
 import config from "../../config";
+import Loading from "../loading";
 
 function EditProviderComponent(props) {
   let { provider } = useParams();
   const [params, setParams] = useState([]);
+  const [showLoading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     let id = e.currentTarget.id;
@@ -27,6 +30,7 @@ function EditProviderComponent(props) {
     setParams(newparams);
   };
   const handleUpdate = (e) => {
+    setLoading(true);
     const response = fetch(config.api + "update", {
       method: "POST",
       cache: "no-cache",
@@ -41,6 +45,10 @@ function EditProviderComponent(props) {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
       });
   };
   useLayoutEffect(() => {
@@ -61,24 +69,34 @@ function EditProviderComponent(props) {
       });
   }, []);
   return (
-    <div>
-      {params.map((item, i) => {
-        return (
-          <div>
-            {item[0]}:{" "}
-            <input
-              type="text"
-              value={item[1]}
-              name={item[0]}
-              id={item[0]}
-              key={item[0]}
-              onChange={handleChange}
-            />
-          </div>
-        );
-      })}
-      <input type="button" name="submit" value="edit" onClick={handleUpdate} />
-    </div>
+    <>
+      {showLoading ? <Loading /> : ""}
+      <div className="provider">
+        {params.map((item, i) => {
+          return (
+            <div>
+              {item[0]}:{" "}
+              <input
+                type="text"
+                value={item[1]}
+                name={item[0]}
+                id={item[0]}
+                key={item[0]}
+                onChange={handleChange}
+                className="inputProvider"
+              />
+            </div>
+          );
+        })}
+        <input
+          type="button"
+          name="submit"
+          value="edit"
+          onClick={handleUpdate}
+          className="buttonProvider"
+        />
+      </div>
+    </>
   );
 }
 export default EditProviderComponent;
