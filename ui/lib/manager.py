@@ -103,6 +103,7 @@ class Manager:
         self.save()
 
     def login_instagram(self, user, password):
+        print("insta", user, password)
         self._instagram  = Instagram(username=user, password=password)
         if self._instagram.login():
             return True
