@@ -94,13 +94,16 @@ class Manager:
         settings["device"] = self._config.get("http","device")
         settings["audio"] = self._config.get("http","audio")
         settings["pass"] =self._config.get("http","password")
+        settings["stunnel"] =self._config.get("http","stunnel")
         return settings
 
     def set_settings(self, settings):
         self._config.set("http","device", settings['device'])
         self._config.set("http","audio", settings['audio'])
         self._config.set("http","password", settings['pass'])
+        self._config.set("http","stunnel", settings['stunnel'])
         self.save()
+        os.system("sudo sed -i -e '/connect =/ s/= .*/= "+settings['stunnel']+"/' /etc/stunnel/conf.d/instagram.conf")
 
     def login_instagram(self, user, password):
         self._instagram  = Instagram(username=user, password=password)

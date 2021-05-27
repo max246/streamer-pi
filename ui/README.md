@@ -1,3 +1,27 @@
+apt install stunnel4
+
+touch /etc/stunnel/stunnel.conf 
+
+
+setuid = stunnel4
+setgid = stunnel4
+pid=/tmp/stunnel.pid
+output = /var/log/stunnel4/stunnel.log
+include = /etc/stunnel/conf.d
+
+/etc/default/stunnel4
+ENABLE=1
+
+/etc/stunnel/conf.d/instagram.conf 
+[fb-live]
+client = yes
+accept = 127.0.0.1:19350
+connect = live-api-s.facebook.com:443
+verifyChain = no
+
+systemctl restart stunnel4 && systemctl status stunnel4
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

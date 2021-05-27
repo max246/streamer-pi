@@ -6,6 +6,8 @@ import {
   Link,
   useParams,
 } from "react-router-dom";
+import "./style.css";
+import Loading from "../../../loading";
 
 import config from "../../../../config";
 
@@ -14,8 +16,10 @@ function BroadcastInstagramComponent(props) {
   const [created, setCreated] = useState(false);
   const [streamKey, setKey] = useState("");
   const [streamServer, setServer] = useState("");
+  const [showLoading, setLoading] = useState(false);
 
   const handleClick = (e) => {
+    setLoading(true);
     let id = e.currentTarget.id;
     const response = fetch(config.api + "action_instagram", {
       method: "POST",
@@ -29,6 +33,7 @@ function BroadcastInstagramComponent(props) {
     })
       .then((response) => response.json())
       .then((data) => {
+        setLoading(false);
         console.log(data);
         if (data.status) {
           if (data.next == "start") {
@@ -44,6 +49,9 @@ function BroadcastInstagramComponent(props) {
             setStarted(false);
           }
         }
+      })
+      .catch(() => {
+        setLoading(false);
       });
   };
 
@@ -69,41 +77,51 @@ function BroadcastInstagramComponent(props) {
   }, []);
 
   return (
-    <div>
-      {started ? (
-        <div>
-          <h2>Use the following to populate the provider info</h2>
-          Stream key: <input type="text" value={streamKey} />
-          <br />
-          Stream server: <input type="text" value={streamServer} />
-          <br />
-          <input
-            type="button"
-            onClick={handleClick}
-            id="stop"
-            value="Stop broadcast"
-          />
-        </div>
-      ) : (
-        [
-          created ? (
+    <>
+      {showLoading ? <Loading /> : ""}
+
+      <div>
+        {started ? (
+          <div>
+            <h2>Use the following to populate the provider info</h2>
+            Stream key:{" "}
+            <input type="text" value={streamKey} className="inputBroadcast" />
+            <br />
+            Stream server:{" "}
+            <input
+              type="text"
+              value={streamServer}
+              className="inputBroadcast"
+            />
+            <br />
             <input
               type="button"
               onClick={handleClick}
-              id="start"
-              value="Start broadcast"
+              id="stop"
+              value="Stop broadcast"
             />
-          ) : (
-            <input
-              type="button"
-              onClick={handleClick}
-              id="create"
-              value="Create broadcast"
-            />
-          ),
-        ]
-      )}
-    </div>
+          </div>
+        ) : (
+          [
+            created ? (
+              <input
+                type="button"
+                onClick={handleClick}
+                id="start"
+                value="Start broadcast"
+              />
+            ) : (
+              <input
+                type="button"
+                onClick={handleClick}
+                id="create"
+                value="Create broadcast"
+              />
+            ),
+          ]
+        )}
+      </div>
+    </>
   );
 }
 export default BroadcastInstagramComponent;
