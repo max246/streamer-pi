@@ -135,7 +135,7 @@ def update_settings():
         manager.set_settings(data)
         return jsonify({"status" : True})
     except Exception as e:
-        print(e)
+        print("aa",e)
         return jsonify({"status" : False})
 
 @app.route('/api/login_instagram', methods=['POST'])
@@ -208,8 +208,37 @@ def status_instagram():
         print(e)
         return jsonify({"status" : False})
 
+@app.route('/api/list_wifi_hw', methods=['GET'])
+@auth.login_required
+def list_wifi_hw():
+    try:
+        devs = manager.list_wifi_hw()
+        return jsonify({"status" : True, "devs": devs})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
 
+@app.route('/api/scan_wifi', methods=['GET'])
+@auth.login_required
+def scan_wifi():
+    try:
+        wifis = manager.scan_wifi()
+        return jsonify({"status" : True, "wifis": wifis})
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
 
+@app.route('/api/connect_wifi', methods=['POST'])
+@auth.login_required
+def connect_wifi():
+    data = request.get_json()
+    try:
+        wifis = manager.connect_wifi(data['wifi'], data['pass'])
+        return jsonify({"status" :True })
+
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
 
 
 

@@ -4,6 +4,7 @@ import time
 import datetime
 import shutil
 import subprocess
+import re
 
 
 from lib.instagram import *
@@ -95,6 +96,7 @@ class Manager:
         settings["audio"] = self._config.get("http","audio")
         settings["pass"] =self._config.get("http","password")
         settings["stunnel"] =self._config.get("http","stunnel")
+        settings["wifidev"] =self._config.get("http","wifidev")
         return settings
 
     def set_settings(self, settings):
@@ -102,9 +104,10 @@ class Manager:
         self._config.set("http","audio", settings['audio'])
         self._config.set("http","password", settings['pass'])
         self._config.set("http","stunnel", settings['stunnel'])
+        self._config.set("http","wifidev", settings['wifidev'])
         self.save()
-        os.system("sudo sed -i -e '/connect =/ s/= .*/= "+settings['stunnel']+"/' /etc/stunnel/conf.d/instagram.conf")
-        os.system("sudo systemctl restart stunnel4")
+        #os.system("sudo sed -i -e '/connect =/ s/= .*/= "+settings['stunnel']+"/' /etc/stunnel/conf.d/instagram.conf")
+        #os.system("sudo systemctl restart stunnel4")
 
     def login_instagram(self, user, password):
         print("insta", user, password)
@@ -143,5 +146,45 @@ class Manager:
         return self._instagram.is_loggedin()
 
     def scan_wifi(self):
-        print("test")
-        #sudo iw dev wlan0 scan ap-force |  egrep "^BSS|SSID:"
+        wifis =[]
+        cmds = ["sudo", "iw", "dev", "wlp3s0", "scan", "ap-force"] #, "|",  "egrep", "\"^BSS|SSID:\""]
+        p =  subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+        stdout = p.stdout
+        wifi = []
+        while True:
+            line = stdout.readline()
+            if not line:
+                break
+            m = re.search('SSID: (.*)', line)
+            if m:
+                wifi.append(m.group(1))
+                wifis.append(wifi)
+            m = re.search('BSS (([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))', line)
+            if m:
+                wifi = []
+                wifi.append(m.group(1))
+            print(line)
+        return wifis
+
+    def list_wifi_hw(self):
+        devs = []
+        cmds = ["sudo", "iw", "dev"]
+        p =  subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+        stdout = p.stdout
+        while True:
+            line = stdout.readline()
+            if not line:
+                break
+            m = re.search('Interface (.*)', line)
+            if m:
+                devs.append(m.group(1))
+        return devs
+
+    def connect_wifi(self, ssid, password):
+        print(ssid, password)
+        os.system("sudo sed -i -e '/bssid=/s/=.*/="+ssid+"/' /home/christian/projects/streamer-pi/ui/test.conf")
+        os.system("sudo sed -i -e '/psk=/s/=.*/=\""+password+"\"/' /home/christian/projects/streamer-pi/ui/test.conf")
+        #os.system("sudo sh stopap.sh")
+
+
+
