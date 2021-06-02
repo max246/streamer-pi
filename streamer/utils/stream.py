@@ -74,7 +74,7 @@ class Stream:
             url = self._params['youtube']['url']
             key = self._params['youtube']['key']
 
-            return ["/usr/local/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
+            return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
                     "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt","yuv420p",
                     "-preset", quality, "-framerate", fps , "-b:v", vbr, "-f" ,"flv", "{}/{}".format(url, key)]
         elif provider == 'twitch':
@@ -83,7 +83,7 @@ class Stream:
             vbr = self._params['twitch']['vbr']
             url = self._params['twitch']['url']
             key = self._params['twitch']['key']
-            return ["/usr/local/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
+            return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
                     "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p",
                     "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}{}".format(url, key)]
         elif provider == 'instagram':
@@ -92,7 +92,7 @@ class Stream:
             vbr = self._params['instagram']['vbr']
             url = self._params['instagram']['url']
             key = self._params['instagram']['key']
-            return ["/usr/local/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
+            return ["/usr/bin/ffmpeg", "-ac", "1", "-f", "alsa", "-i", str(self._input_audio), "-acodec", "aac",
                     "-i", str(self._input), "-vcodec", "libx264", "-pix_fmt", "yuv420p","-s","720x1280",
                     "-preset", quality, "-framerate", fps, "-b:v", vbr, "-f", "flv", "{}{}".format(url, key)]
 

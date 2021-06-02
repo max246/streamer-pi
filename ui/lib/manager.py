@@ -143,6 +143,5 @@ class Manager:
         return self._instagram.is_loggedin()
 
     def scan_wifi(self):
+        print("test")
         #sudo iw dev wlan0 scan ap-force |  egrep "^BSS|SSID:"
-
-
