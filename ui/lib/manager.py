@@ -145,9 +145,13 @@ class Manager:
     def get_status_login(self):
         return self._instagram.is_loggedin()
 
+    def get_current_wifi_device(self):
+        return  self._config.get("http","wifidev")
+
     def scan_wifi(self):
         wifis =[]
-        cmds = ["sudo", "iw", "dev", "wlp3s0", "scan", "ap-force"] #, "|",  "egrep", "\"^BSS|SSID:\""]
+        wifidev = self.get_current_wifi_device()
+        cmds = ["sudo", "iw", "dev", wifidev, "scan", "ap-force"] #, "|",  "egrep", "\"^BSS|SSID:\""]
         p =  subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
         stdout = p.stdout
         wifi = []
@@ -182,9 +186,9 @@ class Manager:
 
     def connect_wifi(self, ssid, password):
         print(ssid, password)
-        os.system("sudo sed -i -e '/bssid=/s/=.*/="+ssid+"/' /home/christian/projects/streamer-pi/ui/test.conf")
-        os.system("sudo sed -i -e '/psk=/s/=.*/=\""+password+"\"/' /home/christian/projects/streamer-pi/ui/test.conf")
-        #os.system("sudo sh stopap.sh")
+        os.system("sudo sed -i -e '/ssid=/s/=.*/=\""+ssid+"\"/' /etc/wpa_supplicant/wpa_supplicant.conf")
+        os.system("sudo sed -i -e '/psk=/s/=.*/=\""+password+"\"/' /etc/wpa_supplicant/wpa_supplicant.conf")
+        os.system("sudo sh /home/pi/streamer-pi/hostap/stopap.sh")
 
 
 
