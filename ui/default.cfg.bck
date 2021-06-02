@@ -5,7 +5,7 @@ active=youtube
 device = /dev/video0
 audio =
 stunnel =
-
+wifidev =
 
 [youtube]
 url=rtmp://a.rtmp.youtube.com/live2
