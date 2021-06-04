@@ -240,6 +240,17 @@ def connect_wifi():
         print(e)
         return jsonify({"status" : False})
 
+@app.route('/api/enable_hotspot', methods=['POST'])
+@auth.login_required
+def enable_hotspot():
+    data = request.get_json()
+    try:
+        manager.enable_hotspot()
+        return jsonify({"status" :True })
+    except Exception as e:
+        print(e)
+        return jsonify({"status" : False})
+
 
 
 app.run(debug=False, host='0.0.0.0', port=port)

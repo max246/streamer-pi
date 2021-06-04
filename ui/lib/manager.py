@@ -97,6 +97,7 @@ class Manager:
         settings["pass"] =self._config.get("http","password")
         settings["stunnel"] =self._config.get("http","stunnel")
         settings["wifidev"] =self._config.get("http","wifidev")
+        settings["is_hotspot"] = self.is_hotspot()
         return settings
 
     def set_settings(self, settings):
@@ -189,6 +190,27 @@ class Manager:
         os.system("sudo sed -i -e '/ssid=/s/=.*/=\""+ssid+"\"/' /etc/wpa_supplicant/wpa_supplicant.conf")
         os.system("sudo sed -i -e '/psk=/s/=.*/=\""+password+"\"/' /etc/wpa_supplicant/wpa_supplicant.conf")
         os.system("sudo sh /home/pi/streamer-pi/hostap/stopap.sh")
+
+    def enable_hotspot(self):
+        os.system("sudo sh /home/pi/streamer-pi/hostap/startap.sh")
+
+    def is_hotspot(self):
+        wifidev = self.get_current_wifi_device()
+        cmds = ["sudo", "wpa_cli", "-i", wifidev, "status"]
+        p =  subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+        stdout = p.stdout
+        while True:
+            line = stdout.readline()
+            if not line:
+                break
+            if line.find("Failed to connect") >= 0:
+                return True
+            if line.find("SCANNING") >= 0:
+                return False
+            if line.find("ip_address=") >= 0:
+                return False
+
+        return False
 
 
 

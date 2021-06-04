@@ -25,6 +25,7 @@ function EditProviderComponent(props) {
   const [wifis, setWifis] = useState([]);
   const [wifi, setWifi] = useState("");
   const [wifipass, setWifiPass] = useState("");
+  const [isHS, setHS] = useState(false);
 
   const handleChange = (e) => {
     let value = e.currentTarget.value;
@@ -41,6 +42,28 @@ function EditProviderComponent(props) {
     else if (id == "wifidev") setDeviceWifi(value);
     else if (id == "wifi") setWifi(value);
     else setDevice(value);
+  };
+
+  const handleHotspot = (e) => {
+    setLoading(true);
+    const response = fetch(config.api + "enable_hotspot", {
+      method: "POST",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        isHS: isHS,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status) window.location.reload(false);
+        else setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
   const handleConnect = (e) => {
@@ -162,6 +185,7 @@ function EditProviderComponent(props) {
           setPass(settings["pass"]);
           setStunnel(settings["stunnel"]);
           setDeviceWifi(settings["wifidev"]);
+          setHS(settings["is_hotspot"]);
         }
       });
   }, []);
@@ -170,6 +194,9 @@ function EditProviderComponent(props) {
       {showLoading ? <Loading /> : ""}
       <div class="settings">
         <div>
+          <h1>Settings</h1>
+        </div>
+        <div>
           Devices:{" "}
           <select
             name="devices"
@@ -177,6 +204,7 @@ function EditProviderComponent(props) {
             id="device"
             class="inputSetting"
           >
+            <option value="">-select-</option>
             {devices.map((item, i) => {
               return (
                 <option value={item} selected={device == item ? "selecte" : ""}>
@@ -194,6 +222,7 @@ function EditProviderComponent(props) {
             id="audio"
             class="inputSetting"
           >
+            <option value="">-select-</option>
             {audio.map((item, i) => {
               return (
                 <option
@@ -251,56 +280,84 @@ function EditProviderComponent(props) {
           </select>
         </div>
         <div>
-          Wifi:{" "}
-          <input type="button" value="scan" name="scam" onClick={handleScan} />{" "}
-          <select
-            name="wifi"
-            onChange={handleDevice}
-            id="wifi"
-            class="inputSetting"
-          >
-            <option value="">-select-</option>
-            {wifis.map((item, i) => {
-              return (
-                <option
-                  value={item[0]}
-                  selected={wifi == item ? "selecte" : ""}
-                >
-                  {item[1] + " (" + item[0] + ")"}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-
-        <div>
-          Wifi pass:{" "}
-          <input
-            type="text"
-            value={wifipass}
-            name="wifipass"
-            id="wifipass"
-            onChange={handleChange}
-            class="inputSetting"
-          />
-        </div>
-        <div>
-          Wifi control:{" "}
           <input
             type="button"
-            value="Connect"
-            name="connect"
-            onClick={handleConnect}
-          />{" "}
-          - Once pressed, the system will try to connect to the wifi
+            name="submit"
+            value="Update"
+            onClick={handleUpdate}
+          />
         </div>
 
-        <input
-          type="button"
-          name="submit"
-          value="edit"
-          onClick={handleUpdate}
-        />
+        <div>
+          <div>
+            <h1>Wifi connection</h1>
+          </div>
+          {isHS ? (
+            <>
+              <div>
+                Wifi:{" "}
+                <input
+                  type="button"
+                  value="scan"
+                  name="scam"
+                  onClick={handleScan}
+                />{" "}
+                <select
+                  name="wifi"
+                  onChange={handleDevice}
+                  id="wifi"
+                  class="inputSetting"
+                >
+                  <option value="">-select-</option>
+                  {wifis.map((item, i) => {
+                    return (
+                      <option
+                        value={item[1]}
+                        selected={wifi == item ? "selecte" : ""}
+                      >
+                        {item[1] + " (" + item[0] + ")"}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              <div>
+                Wifi pass:{" "}
+                <input
+                  type="text"
+                  value={wifipass}
+                  name="wifipass"
+                  id="wifipass"
+                  onChange={handleChange}
+                  class="inputSetting"
+                />
+              </div>
+              <div>
+                Wifi control:{" "}
+                <input
+                  type="button"
+                  value="Connect"
+                  name="connect"
+                  onClick={handleConnect}
+                />
+                <br />
+                Once pressed, the system will try to connect to the wifi
+              </div>
+            </>
+          ) : (
+            <div>
+              {" "}
+              Wifi control:{" "}
+              <input
+                type="button"
+                value="Enable Hotspot"
+                name="hotspot"
+                onClick={handleHotspot}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
