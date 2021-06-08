@@ -1,5 +1,7 @@
 import subprocess
 import configparser
+import time
+import os
 
 config = configparser.ConfigParser()
 config.read('../ui/default.cfg')
@@ -26,8 +28,14 @@ def check_wifi():
 
     return STATUS_CONNECTING
 
-status = check_wifi()
 
-if status == STATUS_CONNECTING: #No much happening so lets force to AP
-    os.system("sudo sh /home/pi/streamer-pi/hostap/startap.sh")
+
+while True:
+    status = check_wifi()
+
+    print("Status", status)
+    if status == STATUS_CONNECTING: #No much happening so lets force to AP
+        os.system("sudo sh /home/pi/streamer-pi/hostap/startap.sh")
+
+    time.sleep(60)
 

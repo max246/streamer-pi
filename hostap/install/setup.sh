@@ -12,7 +12,7 @@ cat > /etc/hostapd/hostapd.conf <<EOF
 #2.4GHz setup wifi 80211 b,g,n
 interface=wlan0
 driver=nl80211
-ssid=RPiHotspotN
+ssid=StreamerPi
 hw_mode=g
 channel=8
 wmm_enabled=0
@@ -52,3 +52,12 @@ EOF
 cat >>  /etc/dhcpcd.conf <<EOF
 nohook wpa_supplicant
 EOF
+
+
+## Add this to /etc/wpa_supplicant/wpa_supplicant.conf 
+#country=GB
+#network={
+#        ssid="Xman"
+#        psk="dfdsfssdee344"
+#}
+

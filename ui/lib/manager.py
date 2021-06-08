@@ -153,6 +153,7 @@ class Manager:
         wifis =[]
         wifidev = self.get_current_wifi_device()
         cmds = ["sudo", "iw", "dev", wifidev, "scan", "ap-force"] #, "|",  "egrep", "\"^BSS|SSID:\""]
+        print(cmds)
         p =  subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
         stdout = p.stdout
         wifi = []
