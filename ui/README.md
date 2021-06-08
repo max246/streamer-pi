@@ -1,4 +1,4 @@
-#UI 
+# UI 
 
 The UI is part of the main core of the streamer PI, it contains the main site made in React and the backend made in Python.
 If you are cloning the repo on your PI, it will be better to create the files on your machine or download the release package.
