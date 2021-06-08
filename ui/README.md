@@ -1,102 +1,65 @@
-apt install stunnel4
+#UI 
 
-touch /etc/stunnel/stunnel.conf 
+The UI is part of the main core of the streamer PI, it contains the main site made in React and the backend made in Python.
+If you are cloning the repo on your PI, it will be better to create the files on your machine or download the release package.
+
+## Structure
+
+* src
+
+It contains all the source code from React which you need to compile and then move the folder BUILD to the machine that you want to run the software
+
+* public
+
+This is part of React which is used when compiling
+
+* lib
+
+It contains files for the backend
+
+* install
+
+It contains data and script to run when you need to install the project
+
+## Install
+
+With a fresh install on your Raspberry Pi, run the script 
+`install/setup.sh`
+which will install:
+* python3
+* ffmpeg
+* stunnel4: needed to enable rtmps as ffmpeg is not compiled by default
+* supervisor: needed to run the scripts
+* hostapd and dnsmasq: needed to setup hotspot
 
 
-setuid = stunnel4
-setgid = stunnel4
-pid=/tmp/stunnel.pid
-output = /var/log/stunnel4/stunnel.log
-include = /etc/stunnel/conf.d
+## Stunnel4
 
-/etc/default/stunnel4
-ENABLE=1
+This is an imporant part if you want to stream to Instagram due to ffmpeg not being compiled with rtmps.
 
-/etc/stunnel/conf.d/instagram.conf 
-[fb-live]
-client = yes
-accept = 127.0.0.1:19350
-connect = live-api-s.facebook.com:443
-verifyChain = no
+When installing you will need to change this manually: 
 
-systemctl restart stunnel4 && systemctl status stunnel4
-
-
-
-
-Go to 
-sudo nano /etc/sysctl.conf
+`sudo nano /etc/sysctl.conf`
 
 uncomment 
-net.ipv4.ip_forward=1
 
-# Getting Started with Create React App
+`net.ipv4.ip_forward=1`
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Compile source
 
-In the project directory, you can run:
+The website need to be compiled if any changes or you are not using the release package and it will create a build folder which the backend will fetch for the hosting.
 
-### `npm start`
+We suggest to run `npm run build` on a PC due to the Raspberry Pi taking too long to comile the source.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Configuration
 
-### `npm test`
+You would need to pre-configure the `default.cfg` with some of the setting such as  `wifidev`  and `password`.
+These are important due to be the main information when login in the web interface and be able to connect to a wifi network.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Run UI
 
-### `npm run build`
+To run the UI is very simple, supervisor is taking care to run the script and restart if there is any issue. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The current paths are configured for a Raspberry pi, if you want to run it on another machine or different path, make sure you change them before running it.

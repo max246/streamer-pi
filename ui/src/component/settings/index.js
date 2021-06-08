@@ -116,6 +116,7 @@ function EditProviderComponent(props) {
   };
 
   const handleScan = (e) => {
+    setLoading(true);
     const response = fetch(config.api + "scan_wifi", {
       method: "GET",
       cache: "no-cache",
@@ -125,8 +126,14 @@ function EditProviderComponent(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        setWifis(data.wifis);
+        setLoading(false);
+        if (data.status) setWifis(data.wifis);
+        else {
+          alert("something went wrong, try again");
+        }
+      })
+      .catch(() => {
+        setLoading(false);
       });
   };
 

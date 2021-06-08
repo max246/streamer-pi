@@ -1,8 +1,10 @@
 sudo apt-get install python3 ffmpeg pip3 stunnel4 supervisor hostapd dnsmasq
-sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
+#sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
+sudo cp ui.conf /etc/supervisor/conf.d/ui.conf
+mkdir /home/pi/log
 
 cd ..
-sudo pip3 install -r r.txt
+sudo pip3 install -r requirements.txt
 
 sudo touch /etc/stunnel/stunnel.conf
 
@@ -52,3 +54,4 @@ sudo systemctl enable hostapd
 
 systemctl stop hostapd
 systemctl stop dnsmasq
+
