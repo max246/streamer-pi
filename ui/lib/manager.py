@@ -107,8 +107,8 @@ class Manager:
         self._config.set("http","stunnel", settings['stunnel'])
         self._config.set("http","wifidev", settings['wifidev'])
         self.save()
-        #os.system("sudo sed -i -e '/connect =/ s/= .*/= "+settings['stunnel']+"/' /etc/stunnel/conf.d/instagram.conf")
-        #os.system("sudo systemctl restart stunnel4")
+        os.system("sudo sed -i -e '/connect =/ s/= .*/= "+settings['stunnel']+"/' /etc/stunnel/conf.d/instagram.conf")
+        os.system("sudo systemctl restart stunnel4")
 
     def login_instagram(self, user, password):
         print("insta", user, password)

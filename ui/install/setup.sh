@@ -1,7 +1,5 @@
-sudo apt-get install python3 ffmpeg pip3 stunnel4 supervisor hostapd dnsmasq
 #sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
 sudo cp ui.conf /etc/supervisor/conf.d/ui.conf
-mkdir /home/pi/log
 
 cd ..
 sudo pip3 install -r requirements.txt
@@ -21,8 +19,10 @@ ENABLE=1
 
 EOF
 
+sudo mkdir /etc/stunnel/conf.d
+
 sudo cat > /etc/stunnel/conf.d/instagram.conf  <<EOF
-[fb-live]
+[insta-live]
 client = yes
 accept = 127.0.0.1:19350
 connect = live-api-s.facebook.com:443
@@ -30,28 +30,8 @@ verifyChain = no
 EOF
 
 sudo systemctl restart stunnel4
-sudo systemctl status stunnel4
 
 
-sudo cat > /etc/hostapd/hostapd.conf <<EOF
-country_code=GB
-interface=wlan0
-ssid=NameOfNetwork
-hw_mode=g
-channel=7
-macaddr_acl=0
-auth_algs=1
-ignore_broadcast_ssid=0
-wpa=2
-wpa_passphrase=AardvarkBadgerHedgehog
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP
-rsn_pairwise=CCMP
-EOF
 
-sudo systemctl unmask hostapd
-sudo systemctl enable hostapd
-
-systemctl stop hostapd
-systemctl stop dnsmasq
+sudo supervisorctl reload
 

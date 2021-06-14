@@ -10,6 +10,20 @@ STATUS_HS = 1
 STATUS_CONNECTING = 2
 STATUS_CONNECTED = 3
 
+def ap_up():
+    wifidev = config.get("http","wifidev")
+    cmds = ["sudo", "ifconfig", wifidev]
+    p =  subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+    stdout = p.stdout
+    while True:
+        line = stdout.readline()
+        if not line:
+            break
+        if line.find("192.168.4.5") >= 0:
+            return True
+
+    return False
+
 def check_wifi():
     wifidev = config.get("http","wifidev")
     cmds = ["sudo", "wpa_cli", "-i", wifidev, "status"]
@@ -20,7 +34,10 @@ def check_wifi():
         if not line:
             break
         if line.find("Failed to connect") >= 0:
-            return STATUS_HS
+            if ap_up():
+                return STATUS_HS
+            else:
+                return STATUS_CONNECTING 
         if line.find("SCANNING") >= 0:
             return STATUS_CONNECTING
         if line.find("ip_address=") >= 0:

@@ -187,6 +187,7 @@ class Instagram:
             'guid': self.uuid,
         }
         if self.send_request('accounts/two_factor_login/', self.generate_signature(json.dumps(data)), login=True):
+            self.isLoggedIn = True
             return True
         else:
             return False

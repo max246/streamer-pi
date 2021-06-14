@@ -5,7 +5,7 @@ active=youtube
 device = /dev/video0
 audio =
 stunnel =
-wifidev =
+wifidev = wlan0
 
 [youtube]
 url=rtmp://a.rtmp.youtube.com/live2
@@ -23,7 +23,7 @@ vbr=1000k
 
 [instagram]
 url =
-key =
+key = rtmp://127.0.0.1:19350/rtmp/
 fps=30
 quality=veryfast
 vbr=6000k

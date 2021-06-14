@@ -1,7 +1,6 @@
-sudo apt-get purge dns-root-data
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install hostapd dnsmasq
+sudo rfkill unblock 0
+sudo ifconfig wlan0 up
+
 
 sudo systemctl unmask hostapd
 
@@ -49,6 +48,10 @@ EOF
 
 ## Change sudo nano /etc/sysctl.conf  to net.ipv4.ip_forward=1
 
+if grep -q "#net.ipv4.ip_forward" "/etc/sysctl.conf"; then
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+fi
+
 cat >>  /etc/dhcpcd.conf <<EOF
 nohook wpa_supplicant
 EOF
@@ -57,7 +60,22 @@ EOF
 ## Add this to /etc/wpa_supplicant/wpa_supplicant.conf 
 #country=GB
 #network={
-#        ssid="Xman"
-#        psk="dfdsfssdee344"
+#        ssid="wifi"
+#        psk="pass"
 #}
 
+if ! grep -q "network=" "/etc/wpa_supplicant/wpa_supplicant.conf"; then
+sudo cat >> /etc/wpa_supplicant/wpa_supplicant.conf  <<EOF
+country=GB
+network={
+        ssid="wifi"
+        psk="pass"
+}
+EOF
+fi
+
+sudo cp checkap.conf /etc/supervisor/conf.d/checkap.conf
+
+sudo supervisorctl  reload
+sudo ifconfig wlan0 up
+sh ../startap.sh
