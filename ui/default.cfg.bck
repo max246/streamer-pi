@@ -22,8 +22,8 @@ quality=medium
 vbr=1000k
 
 [instagram]
-url =
-key = rtmp://127.0.0.1:19350/rtmp/
+url =rtmp://127.0.0.1:19350/rtmp/
+key = 
 fps=30
 quality=veryfast
 vbr=6000k
